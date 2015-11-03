@@ -2,10 +2,12 @@ package com.theironyard;
 
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -45,6 +47,21 @@ public class MainTest {
         endConnection(conn);
 
         assertTrue(message != null);
+    }
+
+    @Test
+    public void testReplies() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn , "Alice" , "");
+        Main.insertUser(conn , "Bob" , "");
+        Main.insertMessage(conn , 1 , -1 , "Hello World!");
+        Main.insertMessage(conn , 2 , 1 , "This is a reply");
+        Main.insertMessage(conn , 2 , 1 , "This is another reply");
+        ArrayList<Message> replies = Main.selectReplies(conn,1);
+        endConnection(conn);
+
+        assertTrue(replies.size() == 2);
+
     }
 
 }
